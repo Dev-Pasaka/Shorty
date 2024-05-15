@@ -33,7 +33,7 @@ tasks {
 
 ktor {
     fatJar {
-        archiveFileName.set("PaviconTechComm.jar")
+        archiveFileName.set("Shorty.jar")
     }
 }
 

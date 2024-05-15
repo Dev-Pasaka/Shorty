@@ -1,10 +1,8 @@
 package com.example.data.repository
 
-import arrow.fx.coroutines.Use
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm.HMAC256
 import com.example.common.JWTConfig
-import com.example.common.utils.DatabaseConfig
 import com.example.data.database.Entries
 import com.example.data.database.entries.user.User
 import com.example.data.database.entries.user.encryptPassword
@@ -16,11 +14,8 @@ import com.example.domain.repository.UserRepository
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Updates
 import io.ktor.http.*
-import io.ktor.server.application.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.mindrot.jbcrypt.BCrypt
 
 import java.util.*
 

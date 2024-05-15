@@ -4,9 +4,8 @@ import com.example.presentation.auth.createAccount
 import com.example.presentation.auth.deleteUser
 import com.example.presentation.auth.resetPassword
 import com.example.presentation.auth.signIn
-import com.example.presentation.email.sendEmails
 import com.example.presentation.project.*
-import com.example.presentation.sms.sendSms
+import com.example.presentation.shortenUrl.*
 import com.example.presentation.user.getUserData
 import com.example.presentation.user.updateUserInfo
 import io.ktor.server.application.*
@@ -39,11 +38,16 @@ fun Application.configureRouting() {
         resetApiKey()
         getProject()
 
-        //Emails
-        sendEmails()
+        //Shorten Url
+        shortenUrl()
+        deleteShortUrl()
+        generateShortUrl()
+        getLongUrl()
+        getShortUrls()
+        quickies()
+        shortenUrl()
+        updateLongUrl()
 
-        //Sms
-        sendSms()
 
     }
 }

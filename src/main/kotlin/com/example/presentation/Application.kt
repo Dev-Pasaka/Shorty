@@ -2,7 +2,6 @@ package com.example.presentation
 
 import com.example.common.ServerConfig
 import com.example.plugins.*
-import com.example.plugins.kafka.startConsumers
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
@@ -20,6 +19,5 @@ fun Application.module() {
     configureSecurity()
     configureRouting()
     corsConfiguration()
-    startConsumers()
     requestLogging()
 }
