@@ -7,4 +7,5 @@ data class ShortenDto(
     val apiKey:String,
     val projectName:String,
     val longUrl:String,
+    val email:String
 )

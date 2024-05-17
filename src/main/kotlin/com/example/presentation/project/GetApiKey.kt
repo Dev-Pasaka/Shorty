@@ -15,7 +15,7 @@ fun Route.getApiKey(){
         get("${ServerConfig.apiVersion}/getApiKey"){
 
             val projectName = call.parameters["projectName"]
-            if (projectName.isNullOrBlank()){
+            if (projectName == null){
                 call.respond(
                     status =HttpStatusCode(HttpStatusCode.BadRequest.value, description = "Bad request")  ,
                     GetApiKeyQueryResult(message = "Project name parameter can't be null or empty")

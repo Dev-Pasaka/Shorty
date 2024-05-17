@@ -15,14 +15,14 @@ fun Route.resetApiKey(){
         get("${ServerConfig.apiVersion}/resetApiKey"){
             val projectName = call.parameters["projectName"]
 
-            if (projectName.isNullOrBlank())  call.respond(
+            if (projectName == null)  call.respond(
                 status = HttpStatusCode(HttpStatusCode.BadRequest.value, description = "Bad request"),
                 ResetApiKeyQueryResult(message = "Project name parameter can't be null or empty")
 
             )
             val result = ResetApiKeyUseCase().resetApiKey(projectName = projectName ?: "")
             call.respond(
-                status = HttpStatusCode(HttpStatusCode.BadRequest.value, description = "Bad request"),
+                status = HttpStatusCode(result.httpStatusCode, description = result.message),
                 result
             )
         }

@@ -67,7 +67,11 @@ class ShortenUrlRepositoryImpl(
     override suspend fun getLongUrl(shortUrl: String): GetLongUrlQueryResult = withContext(Dispatchers.IO) {
         val result = entries.dbShortenUrl.find(Filters.eq(ShortenUrl::shortenUrl.name, shortUrl)).firstOrNull()
             ?: return@withContext  GetLongUrlQueryResult(message = "Short url provide does not exist")
-        return@withContext GetLongUrlQueryResult(status = true, message = "Url fetched successfully", longUrl = result.longUrl)
+        return@withContext GetLongUrlQueryResult(
+            status = true,
+            message = "Url fetched successfully",
+            data  = result.toGetShortenUrl()
+        )
 
     }
 
@@ -87,6 +91,20 @@ class ShortenUrlRepositoryImpl(
             status = true,
             message = "Url updated successful"
         )
+    }
+
+    override suspend fun getAllUrls(email: String): GetAllShortenedUrlQueryResult = withContext(Dispatchers.IO) {
+        val result = entries.dbShortenUrl.find(Filters.eq(ShortenUrl::email.name, email))
+            .map { it.toGetShortenUrl() }.toList()
+        return@withContext if (result.isNotEmpty()) {
+            GetAllShortenedUrlQueryResult(
+                status = true,
+                message = "Url fetched successfully",
+                shortenUrls = result
+            )
+        } else {
+            GetAllShortenedUrlQueryResult(message = "You have no short links or project name provided does not exists")
+        }
     }
 
 

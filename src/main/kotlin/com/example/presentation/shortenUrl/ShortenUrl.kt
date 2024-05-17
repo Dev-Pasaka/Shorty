@@ -24,8 +24,8 @@ fun Route.shortenUrl(){
         /** Get quickies url */
         val result = GetLongUrlUseCase().getLongUrl(shortUrl = shortUrl ?: "")
 
-        if (result.longUrl != null){
-            call.respondRedirect(url = result.longUrl)
+        if (result.data?.longUrl != null){
+            call.respondRedirect(url = result.data.longUrl)
         }else{
             call.respond(
                 status = HttpStatusCode(value = result.httpStatusCode, description = result.message),

@@ -47,6 +47,7 @@ fun Application.configureRouting() {
         quickies()
         shortenUrl()
         updateLongUrl()
+        getAllShortUrls()
 
 
     }

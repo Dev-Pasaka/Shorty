@@ -7,6 +7,7 @@ import org.bson.types.ObjectId
 @Serializable
 data class ShortenUrl(
     val id:String = ObjectId().toString(),
+    val email:String? = null,
     val projectName:String,
     val longUrl:String,
     val shortenUrl: String? = null,

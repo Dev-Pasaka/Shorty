@@ -12,7 +12,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Route.getShortUrls() {
-    get("${ServerConfig.apiVersion}/getAllShortUrls/{projectName?}") {
+    get("${ServerConfig.apiVersion}/getShortUrls/{projectName?}") {
         val projectName = call.parameters["projectName"]
         if (projectName.isNullOrBlank()) {
             call.respond(

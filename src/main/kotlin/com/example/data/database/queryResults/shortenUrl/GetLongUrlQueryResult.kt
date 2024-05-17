@@ -9,5 +9,5 @@ data class GetLongUrlQueryResult(
     val httpStatusCode: Int = HttpStatusCode.OK.value,
     val status:Boolean = false,
     val message:String = "",
-    val longUrl:String?  = null
+    val data:GetShortenUrlDto? = null
 )

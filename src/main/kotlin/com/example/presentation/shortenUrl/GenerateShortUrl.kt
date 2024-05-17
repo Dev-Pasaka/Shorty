@@ -25,9 +25,10 @@ fun Route.generateShortUrl(){
                 )
             }
             true ->{
+
                 /** Create shortened url */
                 val result = CreateShortUrlUseCase().createShortUrl(
-                    shortenUrl = ShortenUrl(projectName = data.projectName, longUrl = data.longUrl)
+                    shortenUrl = ShortenUrl(projectName = data.projectName, longUrl = data.longUrl,  email = data.email)
                 )
                 call.respond(
                     status = HttpStatusCode(value = result.httpStatusCode, description = result.message),

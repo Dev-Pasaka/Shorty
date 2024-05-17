@@ -9,4 +9,6 @@ interface ShortenUrlRepository {
     suspend fun getLongUrl(shortUrl:String):GetLongUrlQueryResult
     suspend fun deleteShortenedUrl(shortUrl: String): DeleteShortenedUrlQueryResult
     suspend fun updateLongUrl(shortUrl: String, longUrl:String):UpdateLongQueryResult
+
+    suspend fun getAllUrls(email:String):GetAllShortenedUrlQueryResult
 }
