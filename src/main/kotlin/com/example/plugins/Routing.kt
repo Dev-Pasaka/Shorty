@@ -1,5 +1,6 @@
 package com.example.plugins
 
+import com.example.presentation.analytics
 import com.example.presentation.auth.createAccount
 import com.example.presentation.auth.deleteUser
 import com.example.presentation.auth.resetPassword
@@ -48,6 +49,7 @@ fun Application.configureRouting() {
         shortenUrl()
         updateLongUrl()
         getAllShortUrls()
+        analytics()
 
 
     }

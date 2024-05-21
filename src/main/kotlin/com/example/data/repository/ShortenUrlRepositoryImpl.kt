@@ -1,6 +1,9 @@
 package com.example.data.repository
 
+import com.example.common.ServerConfig
+import com.example.common.utils.dateAndTimeUtils.Utils
 import com.example.data.database.Entries
+import com.example.data.database.entries.shortenUrl.Analytics
 import com.example.data.database.entries.shortenUrl.ShortenUrl
 import com.example.data.database.queryResults.shortenUrl.*
 import com.example.domain.repository.GenerateShortUrlCodeRepository
@@ -12,32 +15,20 @@ import kotlinx.coroutines.withContext
 
 class ShortenUrlRepositoryImpl(
     private val entries: Entries = Entries,
-    private val generateShortUrlCodeRepository: GenerateShortUrlCodeRepository = GenerateShortUrlCodeRepositoryImpl()
+    private val serverConfig:ServerConfig = ServerConfig
 ) : ShortenUrlRepository {
     override suspend fun createShortenedUrl(shortenUrl: ShortenUrl): CreateShortenedUrlQueryResult =
         withContext(Dispatchers.IO) {
 
-            /** Check if similar shor url exist */
-            /** Check if similar shor url exist */
-            val doesSimilarShortUrlExists =
-                entries.dbShortenUrl.find(
-                    Filters.eq(ShortenUrl::shortenUrl.name, shortenUrl.shortenUrl)
-                ).firstOrNull()
-
-            val shortCode = if (doesSimilarShortUrlExists != null)
-                generateShortUrlCodeRepository.generateShortUrlCode() else shortenUrl.shortenUrl
-
-            val shortUrl = "http://192.46.236.189:8088/$shortCode"
-
             /** Create shortened url*/
-            val result = entries.dbShortenUrl.insertOne(shortenUrl.copy(shortenUrl = shortUrl)).wasAcknowledged()
+            val result = entries.dbShortenUrl.insertOne(shortenUrl).wasAcknowledged()
 
             return@withContext when (result) {
                 true -> {
                     CreateShortenedUrlQueryResult(
                         status = true,
                         message = "Url shortened successful",
-                        shortenedUrl = shortenUrl.toGetShortenUrl().copy(shortUrl = shortUrl)
+                        shortenedUrl = shortenUrl.toGetShortenUrl()
                     )
                 }
 
@@ -50,7 +41,10 @@ class ShortenUrlRepositoryImpl(
     override suspend fun getAllShortenedUrls(projectName: String): GetAllShortenedUrlQueryResult =
         withContext(Dispatchers.IO) {
             val result = entries.dbShortenUrl.find(Filters.eq(ShortenUrl::projectName.name, projectName))
-                .map { it.toGetShortenUrl() }.toList()
+                .map {
+                    val fullUrl = "${serverConfig.baseUrl}${it.shortenUrl}"
+                    it.toGetShortenUrl().copy(shortUrl = fullUrl)
+                }.toList()
             return@withContext if (result.isNotEmpty()) {
                 GetAllShortenedUrlQueryResult(
                     status = true,
@@ -67,12 +61,14 @@ class ShortenUrlRepositoryImpl(
     override suspend fun getLongUrl(shortUrl: String): GetLongUrlQueryResult = withContext(Dispatchers.IO) {
         val result = entries.dbShortenUrl.find(Filters.eq(ShortenUrl::shortenUrl.name, shortUrl)).firstOrNull()
             ?: return@withContext  GetLongUrlQueryResult(message = "Short url provide does not exist")
+
+        val fullUrl = "${serverConfig.baseUrl}${result.shortenUrl}"
+
         return@withContext GetLongUrlQueryResult(
             status = true,
             message = "Url fetched successfully",
-            data  = result.toGetShortenUrl()
+            data  = result.toGetShortenUrl().copy(shortUrl = fullUrl)
         )
-
     }
 
     override suspend fun deleteShortenedUrl(shortUrl: String): DeleteShortenedUrlQueryResult  = withContext(Dispatchers.IO){
@@ -95,7 +91,10 @@ class ShortenUrlRepositoryImpl(
 
     override suspend fun getAllUrls(email: String): GetAllShortenedUrlQueryResult = withContext(Dispatchers.IO) {
         val result = entries.dbShortenUrl.find(Filters.eq(ShortenUrl::email.name, email))
-            .map { it.toGetShortenUrl() }.toList()
+            .map {
+                val fullUrl = "${serverConfig.baseUrl}${it.shortenUrl}"
+                it.toGetShortenUrl().copy(shortUrl = fullUrl)
+            }.toList()
         return@withContext if (result.isNotEmpty()) {
             GetAllShortenedUrlQueryResult(
                 status = true,
@@ -107,5 +106,34 @@ class ShortenUrlRepositoryImpl(
         }
     }
 
+    override suspend fun addClicks(shortUrl: String, analytics: Analytics): Boolean {
+        /** Get short url object */
+        val shortUrlObj = entries.dbShortenUrl.find(
+            Filters.eq(ShortenUrl::shortenUrl.name, shortUrl),
+        ).firstOrNull() ?: return false
+
+        val newAnalytics = shortUrlObj.analytics.toMutableList()
+        newAnalytics.add(analytics)
+
+        return  entries.dbShortenUrl.updateOne(
+            Filters.eq(ShortenUrl::shortenUrl.name, shortUrl),
+            listOf(
+                Updates.set(
+                    ShortenUrl::clicks.name,
+                    shortUrlObj.clicks+1
+                ),
+                Updates.set(
+                    ShortenUrl::analytics.name,
+                    newAnalytics
+                )
+            )
+        ).wasAcknowledged()
+    }
+
 
 }
+
+/*
+suspend fun main(){
+   ShortenUrlRepositoryImpl().addClicks()
+}*/

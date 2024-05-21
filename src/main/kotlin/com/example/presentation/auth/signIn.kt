@@ -12,7 +12,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 fun Route.signIn(){
-    post("${ServerConfig.apiVersion}/signIn"){
+    post("${ServerConfig.apiVersion}/auth/signIn"){
         val credentials = call.receive<UserCredentials>()
         val signInResult = SignInUserUseCase().signIn(email = credentials.email, password = credentials.password)
         call.respond(

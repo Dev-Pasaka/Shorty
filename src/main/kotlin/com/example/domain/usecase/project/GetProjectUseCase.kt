@@ -12,8 +12,8 @@ import kotlinx.serialization.json.Json
 class GetProjectUseCase(
     private val projectRepository: ProjectRepository = ProjectRepositoryImpl()
 ) {
-    suspend fun getProject(projectName: String) = try {
-        val result = projectRepository.getProject(projectName = projectName)
+    suspend fun getProject(projectName: String, email:String) = try {
+        val result = projectRepository.getProject(projectName = projectName, email = email)
         ServerConfig.logger.info(Json.encodeToString(result))
         result
     }catch (e:Exception){

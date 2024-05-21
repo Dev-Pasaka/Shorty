@@ -11,8 +11,8 @@ import kotlinx.serialization.json.Json
 class DeleteProjectUseCase(
     private val projectRepository: ProjectRepository = ProjectRepositoryImpl()
 ) {
-    suspend fun deleteProject(projectName: String) = try {
-        val result = projectRepository.deleteProject(projectName = projectName)
+    suspend fun deleteProject(projectName: String, email:String) = try {
+        val result = projectRepository.deleteProject(projectName = projectName, email = email)
         ServerConfig.logger.info(Json.encodeToString(result))
         result
 

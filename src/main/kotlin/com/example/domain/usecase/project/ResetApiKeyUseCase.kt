@@ -11,8 +11,8 @@ import kotlinx.serialization.json.Json
 class ResetApiKeyUseCase(
     private val projectRepository: ProjectRepository = ProjectRepositoryImpl()
 ) {
-    suspend fun resetApiKey(projectName: String) = try {
-        val result = projectRepository.resetApiKey(projectName = projectName)
+    suspend fun resetApiKey(projectName: String, email:String) = try {
+        val result = projectRepository.resetApiKey(projectName = projectName, email = email)
         ServerConfig.logger.info(Json.encodeToString(result))
         result
     }catch (e:Exception){

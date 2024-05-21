@@ -12,7 +12,8 @@ data class ShortenUrl(
     val longUrl:String,
     val shortenUrl: String? = null,
     val clicks:Int = 0,
-    val createdAt:String = DateAndTimeUtils.currentTime()
+    val createdAt:String = DateAndTimeUtils.currentTime(),
+    val analytics: List<Analytics> = emptyList()
 ){
     fun toGetShortenUrl():GetShortenUrlDto{
         return GetShortenUrlDto(
@@ -20,6 +21,7 @@ data class ShortenUrl(
             longUrl = longUrl,
             shortUrl = shortenUrl ,
             clicks = clicks,
+            analytics = analytics,
             createdAt = createdAt
         )
     }

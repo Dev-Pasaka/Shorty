@@ -14,7 +14,7 @@ import io.ktor.server.routing.*
 
 fun Route.getAllProjects(){
     authenticate {
-        get("${ServerConfig.apiVersion}/getAllProjects"){
+        get("${ServerConfig.apiVersion}/project/all"){
             val email =
                 call.principal<JWTPrincipal>()?.payload?.getClaim("email").toString().removeSurrounding("\"")
             val result = GetAllProjectsUseCase().getAllProjects(email)

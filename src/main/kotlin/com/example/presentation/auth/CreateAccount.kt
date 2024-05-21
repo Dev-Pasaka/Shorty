@@ -11,7 +11,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Route.createAccount(){
-    post("${ServerConfig.apiVersion}/register"){
+    post("${ServerConfig.apiVersion}/auth/register"){
         val userData = call.receive<CreateUser>()
         val registerUser = RegisterUserUseCase().register(
             user = User(

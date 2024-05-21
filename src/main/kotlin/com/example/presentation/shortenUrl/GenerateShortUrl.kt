@@ -12,7 +12,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Route.generateShortUrl(){
-    post("${ServerConfig.apiVersion}/shorten"){
+    post("${ServerConfig.apiVersion}/shorty/shorten"){
         val data = call.receive<ShortenDto>()
 
         val isApiKeyValid = VerifyApiKeyUseCase().verifyApiKey(apiKey = data.apiKey)

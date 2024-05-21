@@ -14,7 +14,7 @@ import io.ktor.server.routing.*
 
 fun Route.createProject(){
     authenticate {
-        post("${ServerConfig.apiVersion}/createProject"){
+        post("${ServerConfig.apiVersion}/project"){
             val email =
                 call.principal<JWTPrincipal>()?.payload?.getClaim("email").toString().removeSurrounding("\"")
             val project = call.receive<CreateProject>()

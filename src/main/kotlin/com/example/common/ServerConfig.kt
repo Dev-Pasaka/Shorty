@@ -10,5 +10,6 @@ object ServerConfig{
     val port = load.getString("ktor.deployment.port") ?: "8080"
     val logger: Logger =  LoggerFactory.getLogger(load.getString("ktor.server.logger") ?: "")
     val apiVersion = load.getString("ktor.server.apiVersion") ?: ""
+    val baseUrl = load.getString("ktor.server.baseUrl") ?: ""
 
 }

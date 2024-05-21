@@ -1,6 +1,7 @@
 package com.example.presentation.shortenUrl
 
 import com.example.common.ServerConfig
+import com.example.common.utils.dateAndTimeUtils.Utils
 import com.example.data.dto.shorten.DeleteShortUrlDto
 import com.example.domain.usecase.project.VerifyApiKeyUseCase
 import com.example.domain.usecase.shortenUrl.DeleteShortenedUrlUseCase
@@ -11,7 +12,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Route.deleteShortUrl() {
-    post("${ServerConfig.apiVersion}/deleteShortUrl"){
+    delete("${ServerConfig.apiVersion}/shorty/delete"){
         val data = call.receive<DeleteShortUrlDto>()
         val isApiKeyValid = VerifyApiKeyUseCase().verifyApiKey(apiKey = data.apiKey)
 
@@ -25,7 +26,7 @@ fun Route.deleteShortUrl() {
             true ->{
                 /** Delete shortened url */
                 val result = DeleteShortenedUrlUseCase().deleteShortenedUrl(
-                    shortUrl = ""
+                    shortUrl = Utils.extractUrlComponents(data.shortUrl).path
                 )
                 call.respond(
                     status = HttpStatusCode(value = result.httpStatusCode, description = result.message),

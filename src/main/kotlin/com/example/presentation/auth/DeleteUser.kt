@@ -11,7 +11,7 @@ import io.ktor.server.routing.*
 
 fun Route.deleteUser(){
     authenticate {
-        get("${ServerConfig.apiVersion}/deleteUser") {
+        delete("${ServerConfig.apiVersion}/auth/delete") {
             val email =
                 call.principal<JWTPrincipal>()?.payload?.getClaim("email").toString().removeSurrounding("\"")
             val deleteUserResult = DeleteUserUseCase().deleteUser(email = email)

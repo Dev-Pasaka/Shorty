@@ -56,10 +56,15 @@ class ProjectRepositoryImpl(
         return@withContext CreateProjectQueryResult(status = true, apiKey = apiKey, message = "Project created successfully")
     }
 
-    override suspend fun deleteProject(projectName: String): DeleteProjectQueryResult = withContext(Dispatchers.IO) {
+    override suspend fun deleteProject(projectName: String, email: String): DeleteProjectQueryResult = withContext(Dispatchers.IO) {
 
         /** Check if project exists */
-        entries.dbProject.find(Filters.eq(Project::projectName.name, projectName))
+        entries.dbProject.find(
+            Filters.and(
+                Filters.eq(Project::projectName.name, projectName),
+                Filters.eq(Project::email.name, email),
+            )
+        )
             ?: return@withContext DeleteProjectQueryResult(message = "Project not found")
 
         /** Delete project form Database*/
@@ -72,10 +77,15 @@ class ProjectRepositoryImpl(
         return@withContext DeleteProjectQueryResult(status = true, message = "Project deleted successfully")
     }
 
-    override suspend fun resetApiKey(projectName: String): ResetApiKeyQueryResult = withContext(Dispatchers.IO) {
+    override suspend fun resetApiKey(projectName: String, email:String): ResetApiKeyQueryResult = withContext(Dispatchers.IO) {
 
         /** Check if project exists */
-        entries.dbProject.find(Filters.eq(Project::projectName.name, projectName)).firstOrNull()
+        entries.dbProject.find(
+            Filters.and(
+                Filters.eq(Project::projectName.name, projectName),
+                Filters.eq(Project::email.name, email),
+            )
+        ).firstOrNull()
             ?: return@withContext ResetApiKeyQueryResult(
                 message = "Project with name above does not exist"
             )
@@ -92,10 +102,15 @@ class ProjectRepositoryImpl(
         ResetApiKeyQueryResult(status = true, apiKey = newApiKey, message = "Api key reset was successful")
     }
 
-    override suspend fun getAPiKey(projectName: String): GetApiKeyQueryResult  = withContext(Dispatchers.IO){
+    override suspend fun getAPiKey(projectName: String, email: String): GetApiKeyQueryResult  = withContext(Dispatchers.IO){
 
         /** Check if project exists */
-        val result = entries.dbProject.find(Filters.eq(Project::projectName.name, projectName)).firstOrNull()
+        val result = entries.dbProject.find(
+            Filters.and(
+                Filters.eq(Project::projectName.name, projectName),
+                Filters.eq(Project::email.name, email),
+            )
+        ).firstOrNull()
             ?: return@withContext GetApiKeyQueryResult(
                 message = "Project not found"
             )
@@ -108,7 +123,7 @@ class ProjectRepositoryImpl(
 
     override suspend fun verifyApiKey(apiKey: String):VerifyApiKeyQueryResult  = withContext(Dispatchers.IO){
         val result = entries.dbProject.find(Filters.eq(Project::apiKey.name, apiKey)).firstOrNull() ?: return@withContext VerifyApiKeyQueryResult(
-            message = "Project not found"
+            message = "Invalid api key"
         )
         val isApiKeyValid =  (result.apiKey == apiKey)
         if (!isApiKeyValid){ return@withContext VerifyApiKeyQueryResult(message = "Invalid Api key") }
@@ -123,7 +138,7 @@ class ProjectRepositoryImpl(
         GetAllProjectQueryResults(projects = projects, message = "Success", status = true)
     }
 
-    override suspend fun getProject(projectName: String): GetProjectQueryResults = withContext(Dispatchers.IO) {
+    override suspend fun getProject(projectName: String, email: String): GetProjectQueryResults = withContext(Dispatchers.IO) {
         val project =  entries.dbProject.find(Filters.eq(Project::projectName.name, projectName)).firstOrNull()?.toGetProject()?.copy(
             currentBill = calculateBill(projectName = projectName) ?: 0.0
         )

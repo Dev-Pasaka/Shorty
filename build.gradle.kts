@@ -40,8 +40,18 @@ ktor {
 ktor {
     docker {
         jreVersion.set(JavaVersion.VERSION_17)
-        localImageName.set("sample-docker-image")
+        localImageName.set("shorty-docker-image")
+        this.imageTag.set("Shorty")
         imageTag.set("0.0.1-preview")
+        portMappings.set(
+            listOf(
+                DockerPortMapping(
+                    8088,
+                    8088,
+                    DockerPortMappingProtocol.TCP
+                )
+            )
+        )
 
 
     }
@@ -88,10 +98,8 @@ dependencies {
     //Africastalking
     implementation("com.github.AfricasTalkingLtd.africastalking-java:core:3.4.11")
 
-
-
-
-
+    implementation("com.maxmind.geoip2:geoip2:4.0.1")
+    implementation("eu.bitwalker:UserAgentUtils:1.21")
 
 
 }
