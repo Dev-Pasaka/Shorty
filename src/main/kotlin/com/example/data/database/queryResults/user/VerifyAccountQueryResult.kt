@@ -5,11 +5,9 @@ import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SignInUserQueryResult(
+data class VerifyAccountQueryResult(
     @Contextual
     val httpStatusCode: Int = HttpStatusCode.OK.value,
     val status:Boolean = false,
     val message:String = "",
-    val isAccountVerified:Boolean = false,
-    val token:String = ""
 )

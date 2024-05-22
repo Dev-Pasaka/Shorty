@@ -97,6 +97,8 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:$ktor_version")
     //Africastalking
     implementation("com.github.AfricasTalkingLtd.africastalking-java:core:3.4.11")
+    // Redis
+    implementation("redis.clients:jedis:5.1.2")
 
     implementation("com.maxmind.geoip2:geoip2:4.0.1")
     implementation("eu.bitwalker:UserAgentUtils:1.21")

@@ -1,10 +1,8 @@
 package com.example.plugins
 
 import com.example.presentation.analytics
-import com.example.presentation.auth.createAccount
-import com.example.presentation.auth.deleteUser
-import com.example.presentation.auth.resetPassword
-import com.example.presentation.auth.signIn
+import com.example.presentation.auth.*
+import com.example.presentation.homePage.getHomePageStats
 import com.example.presentation.project.*
 import com.example.presentation.shortenUrl.*
 import com.example.presentation.user.getUserData
@@ -21,11 +19,17 @@ fun Application.configureRouting() {
             call.respondText("")
         }
 
+        //home
+        getHomePageStats()
+
         //Auth
         createAccount()
         deleteUser()
+        passwordResetOtp()
         resetPassword()
         signIn()
+        verifyAccount()
+
 
         //User
         getUserData()

@@ -10,7 +10,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Route.resetPassword() {
-    post("${ServerConfig.apiVersion}/resetPassword"){
+    post("${ServerConfig.apiVersion}/user/reset"){
         val credentials = call.receive<ResetPasswordCredentials>()
         val resetPasswordResult = ResetPasswordUseCase().resetPassword(
             email = credentials.email, newPassword = credentials.newPassword , otpCode = credentials.otpCode

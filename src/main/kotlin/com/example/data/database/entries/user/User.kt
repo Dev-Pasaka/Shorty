@@ -16,6 +16,8 @@ data class User(
     val email:String,
     val phone:String,
     val password:String,
+    val isAccountVerified:Boolean? = false,
+    val is2FAEnabled:Boolean? = false,
     val otpCode:String? = null
 ){
     fun toDocument(): Document = Document.parse(Json.encodeToString(this))
