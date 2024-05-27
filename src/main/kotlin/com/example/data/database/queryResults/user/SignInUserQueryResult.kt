@@ -10,5 +10,6 @@ data class SignInUserQueryResult(
     val httpStatusCode: Int = HttpStatusCode.OK.value,
     val status:Boolean = false,
     val message:String = "",
+    val isAccountVerified:Boolean = false,
     val token:String = ""
 )

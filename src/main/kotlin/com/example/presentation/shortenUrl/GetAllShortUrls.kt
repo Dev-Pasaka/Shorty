@@ -12,7 +12,7 @@ import io.ktor.server.routing.*
 
 fun Route.getAllShortUrls() {
     authenticate {
-        get("${ServerConfig.apiVersion}/getAllShortUrls"){
+        get("${ServerConfig.apiVersion}/shorty/short/all"){
             val email =
                 call.principal<JWTPrincipal>()?.payload?.getClaim("email").toString().removeSurrounding("\"")
             val result = GetAllShortenUrlByEmailUseCase().getAllShortUrls(email = email)

@@ -6,14 +6,17 @@ import com.example.domain.usecase.project.GetApiKeyUseCase
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 
 fun Route.getApiKey(){
     authenticate {
-        get("${ServerConfig.apiVersion}/getApiKey"){
+        get("${ServerConfig.apiVersion}/project/apiKey"){
 
+            val email =
+                call.principal<JWTPrincipal>()?.payload?.getClaim("email").toString().removeSurrounding("\"")
             val projectName = call.parameters["projectName"]
             if (projectName == null){
                 call.respond(
@@ -21,7 +24,7 @@ fun Route.getApiKey(){
                     GetApiKeyQueryResult(message = "Project name parameter can't be null or empty")
                 )
             }
-            val result = GetApiKeyUseCase().getApiKey(projectName = projectName ?: "")
+            val result = GetApiKeyUseCase().getApiKey(projectName = projectName ?: "", email = email)
             call.respond(
                 status = HttpStatusCode(result.httpStatusCode, description = result.message),
                 result

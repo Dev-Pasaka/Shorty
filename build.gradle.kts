@@ -40,10 +40,24 @@ ktor {
 ktor {
     docker {
         jreVersion.set(JavaVersion.VERSION_17)
-        localImageName.set("sample-docker-image")
-        imageTag.set("0.0.1-preview")
-
-
+        localImageName.set("pascarl/shorty")
+        this.imageTag.set("latest")
+        portMappings.set(
+            listOf(
+                DockerPortMapping(
+                    8088,
+                    8088,
+                    DockerPortMappingProtocol.TCP
+                )
+            )
+        )
+        externalRegistry.set(
+            DockerImageRegistry.dockerHub(
+                appName = provider { "ktor-app" },
+                username = providers.environmentVariable("DOCKER_HUB_USERNAME"),
+                password = providers.environmentVariable("DOCKER_HUB_PASSWORD")
+            )
+        )
     }
 }
 
@@ -87,11 +101,11 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:$ktor_version")
     //Africastalking
     implementation("com.github.AfricasTalkingLtd.africastalking-java:core:3.4.11")
+    // Redis
+    implementation("redis.clients:jedis:5.1.2")
 
-
-
-
-
+    implementation("com.maxmind.geoip2:geoip2:4.0.1")
+    implementation("eu.bitwalker:UserAgentUtils:1.21")
 
 
 }

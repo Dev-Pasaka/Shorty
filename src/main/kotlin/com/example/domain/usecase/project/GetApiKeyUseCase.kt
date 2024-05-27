@@ -11,8 +11,8 @@ import kotlinx.serialization.json.Json
 class GetApiKeyUseCase(
     private val projectRepository: ProjectRepository = ProjectRepositoryImpl()
 ) {
-    suspend fun getApiKey(projectName: String) = try {
-        val result = projectRepository.getAPiKey(projectName = projectName)
+    suspend fun getApiKey(projectName: String, email:String) = try {
+        val result = projectRepository.getAPiKey(projectName = projectName, email = email)
         ServerConfig.logger.info(Json.encodeToString(result))
         result
     }catch (e:Exception){

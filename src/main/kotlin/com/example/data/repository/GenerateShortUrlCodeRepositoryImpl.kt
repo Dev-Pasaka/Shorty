@@ -25,8 +25,3 @@ class GenerateShortUrlCodeRepositoryImpl(
 
 }
 
-fun main(){
-   println(
-       GenerateShortUrlCodeRepositoryImpl().generateShortUrlCode()
-   )
-}

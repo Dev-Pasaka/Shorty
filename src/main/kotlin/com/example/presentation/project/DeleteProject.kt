@@ -13,7 +13,7 @@ import io.ktor.server.routing.*
 
 fun Route.deleteProject(){
     authenticate {
-        get("${ServerConfig.apiVersion}/deleteProject"){
+        delete("${ServerConfig.apiVersion}/project"){
             val email =
                 call.principal<JWTPrincipal>()?.payload?.getClaim("email").toString().removeSurrounding("\"")
             val projectName = call.parameters["projectName"]
@@ -23,7 +23,7 @@ fun Route.deleteProject(){
                 DeleteProjectQueryResult(httpStatusCode = HttpStatusCode.BadRequest.value, message = "Project name parameter can't be null or empty")
             )
 
-            val result = DeleteProjectUseCase().deleteProject(projectName = projectName ?: "")
+            val result = DeleteProjectUseCase().deleteProject(projectName = projectName ?: "", email = email)
             call.respond(
                 status = HttpStatusCode(result.httpStatusCode, description = result.message),
                 result)

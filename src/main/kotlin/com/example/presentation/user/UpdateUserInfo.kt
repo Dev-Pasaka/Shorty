@@ -14,7 +14,7 @@ import io.ktor.server.routing.*
 
 fun Route.updateUserInfo() {
     authenticate {
-        post("${ServerConfig.apiVersion}/updateUserInfo") {
+        put("${ServerConfig.apiVersion}/user") {
             val email =
                 call.principal<JWTPrincipal>()?.payload?.getClaim("email").toString().removeSurrounding("\"")
             val userInfo = call.receive<UpdateUser>()

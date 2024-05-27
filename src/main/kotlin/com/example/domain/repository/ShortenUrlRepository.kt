@@ -1,5 +1,6 @@
 package com.example.domain.repository
 
+import com.example.data.database.entries.shortenUrl.Analytics
 import com.example.data.database.entries.shortenUrl.ShortenUrl
 import com.example.data.database.queryResults.shortenUrl.*
 
@@ -11,4 +12,6 @@ interface ShortenUrlRepository {
     suspend fun updateLongUrl(shortUrl: String, longUrl:String):UpdateLongQueryResult
 
     suspend fun getAllUrls(email:String):GetAllShortenedUrlQueryResult
+
+    suspend fun addClicks(shortUrl: String, analytics: Analytics):Boolean
 }

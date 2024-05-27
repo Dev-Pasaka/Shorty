@@ -11,7 +11,7 @@ import io.ktor.server.routing.*
 
 fun Route.getUserData() {
     authenticate {
-        get("${ServerConfig.apiVersion}/getUserData") {
+        get("${ServerConfig.apiVersion}/user") {
             val email =
                 call.principal<JWTPrincipal>()?.payload?.getClaim("email").toString().removeSurrounding("\"")
             val userResult = GetUserUseCase().getUserData(email = email)

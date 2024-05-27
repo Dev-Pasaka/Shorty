@@ -13,7 +13,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Route.quickies() {
-    post("${ServerConfig.apiVersion}/quickies") {
+    post("${ServerConfig.apiVersion}/shorty/quickies") {
         val data = call.receive<QuickiesDto>()
 
 
