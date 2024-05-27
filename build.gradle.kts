@@ -40,9 +40,8 @@ ktor {
 ktor {
     docker {
         jreVersion.set(JavaVersion.VERSION_17)
-        localImageName.set("shorty-docker-image")
-        this.imageTag.set("Shorty")
-        imageTag.set("0.0.1-preview")
+        localImageName.set("pascarl/shorty")
+        this.imageTag.set("latest")
         portMappings.set(
             listOf(
                 DockerPortMapping(
@@ -52,8 +51,13 @@ ktor {
                 )
             )
         )
-
-
+        externalRegistry.set(
+            DockerImageRegistry.dockerHub(
+                appName = provider { "ktor-app" },
+                username = providers.environmentVariable("DOCKER_HUB_USERNAME"),
+                password = providers.environmentVariable("DOCKER_HUB_PASSWORD")
+            )
+        )
     }
 }
 

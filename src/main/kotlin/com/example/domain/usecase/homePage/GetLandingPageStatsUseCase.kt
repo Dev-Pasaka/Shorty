@@ -26,7 +26,7 @@ class GetLandingPageStatsUseCase(
             redisRepository.set(
                 key = RedisConfig.LANDING_PAGE_STATS,
                 value = Json.encodeToString(result),
-                expireAt = 3600
+                expireAt = 60
             )
             result
         }
