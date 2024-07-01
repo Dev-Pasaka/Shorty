@@ -34,7 +34,18 @@ tasks {
 ktor {
     fatJar {
         archiveFileName.set("Shorty.jar")
+
     }
+}
+
+tasks.withType<Jar> {
+    manifest {
+        attributes["Main-Class"] = "com.example.presentation.ApplicationKt" // Replace with your main class
+    }
+    from({
+        configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
+    })
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 ktor {

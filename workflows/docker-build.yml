@@ -35,7 +35,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t pascarl/Shorty1:latest \
+          docker build -t pascarl/shorty1:latest \
             --build-arg API_VERSION=${API_VERSION} \
             --build-arg BASE_URL=${BASE_URL} \
             --build-arg LOGGER_NAME=${LOGGER_NAME} \
@@ -49,4 +49,4 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
       - name: Push Docker image to Docker Hub
-        run: docker push pascarl/Shorty1:latest
+        run: docker push pascarl/shorty1:latest
