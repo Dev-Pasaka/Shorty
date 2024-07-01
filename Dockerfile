@@ -20,19 +20,20 @@ WORKDIR /app
 # Copy the compiled JAR file into the container from the build stage
 COPY --from=build /app/build/libs/Shorty.jar /app/
 
-# Declare environment variables
+# Declare and set environment variables using ARG and ENV
 ARG API_VERSION
 ARG BASE_URL
 ARG LOGGER_NAME
 ARG SERVER_PORT
-# Set environment variables
-ENV API_VERSION=$API_VERSION
-ENV BASE_URL=$BASE_URL
-ENV LOGGER_NAME=$LOGGER_NAME
-ENV SERVER_PORT=$SERVER_PORT
+
+ENV API_VERSION=${API_VERSION}
+ENV BASE_URL=${BASE_URL}
+ENV LOGGER_NAME=${LOGGER_NAME}
+ENV SERVER_PORT=${SERVER_PORT}
 
 # Expose the port your application runs on
 EXPOSE 8088
 
 # Command to run the application
 CMD ["java", "-jar", "Shorty.jar"]
+
