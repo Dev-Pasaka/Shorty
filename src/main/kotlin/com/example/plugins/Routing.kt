@@ -53,6 +53,10 @@ fun Application.configureRouting() {
 
             call.respondText("")
         }
+        get("/new") {
+
+            call.respondText("Hello there new endpoint")
+        }
 
         //home
         getHomePageStats()
