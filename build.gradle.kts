@@ -64,7 +64,7 @@ ktor {
 dependencies {
     implementation("io.ktor:ktor-server-core-jvm")
     implementation("io.ktor:ktor-server-websockets-jvm")
-    implementation("io.github.flaxoos:ktor-server-kafka-jvm:1.+")
+    implementation("io.github.flaxoos:ktor-server-kafka-jvm:1.2.8")
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm")
     implementation("io.ktor:ktor-server-content-negotiation-jvm")
 
