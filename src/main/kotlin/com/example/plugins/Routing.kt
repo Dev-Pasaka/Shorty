@@ -53,7 +53,7 @@ fun Application.configureRouting() {
 
             call.respondText("")
         }
-        get("/new") {
+        get("/new/data") {
 
             call.respondText("Hello there new endpoint")
         }
