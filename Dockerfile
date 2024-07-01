@@ -1,26 +1,38 @@
-# Use Gradle image for building the application
-FROM gradle:7-jdk17 AS build
+# Stage 1: Build the application
+FROM gradle:7.2.0-jdk11 AS build
 
-# Copy the project files to the build environment and set ownership
-COPY --chown=gradle:gradle . /home/gradle/src
+# Set the working directory inside the container
+WORKDIR /app
 
-# Set the working directory
-WORKDIR /home/gradle/src
+# Copy only the necessary files for dependency resolution
+COPY build.gradle.kts settings.gradle.kts /app/
+COPY src /app/src
 
-# Build the fat JAR file
-RUN gradle buildFatJar --no-daemon
+# Resolve dependencies (caching them)
+RUN gradle clean build --no-daemon
 
-# Use OpenJDK image for running the application
-FROM openjdk:11
+# Stage 2: Create the final Docker image
+FROM openjdk:11-jre-slim
 
-# Expose the application port
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the compiled JAR file into the container from the build stage
+COPY --from=build /app/build/libs/Shorty.jar /app/
+
+# Declare environment variables
+ARG API_VERSION
+ARG BASE_URL
+ARG LOGGER_NAME
+ARG SERVER_PORT
+# Set environment variables
+ENV API_VERSION=$API_VERSION
+ENV BASE_URL=$BASE_URL
+ENV LOGGER_NAME=$LOGGER_NAME
+ENV SERVER_PORT=$SERVER_PORT
+
+# Expose the port your application runs on
 EXPOSE 8088
 
-# Create an application directory
-RUN mkdir /app
-
-# Copy the built JAR file from the build stage to the application directory
-COPY --from=build /home/gradle/src/build/libs/*.jar /app/Shorty.jar
-
-# Set the entry point to run the JAR file
-ENTRYPOINT ["java", "-jar", "/app/Shorty.jar"]
+# Command to run the application
+CMD ["java", "-jar", "Shorty.jar"]

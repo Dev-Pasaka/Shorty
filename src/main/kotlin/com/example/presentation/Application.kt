@@ -28,6 +28,13 @@ fun Application.module() {
     corsConfiguration()
     requestLogging()
 
+    val properties = System.getProperties()
+    properties.forEach { (key, value) ->
+        println("$key: $value")
+    }
+    val loggerName = System.getProperty("LOGGER_NAME")
+    println("LoggerName: $loggerName")
+
 }
 
 

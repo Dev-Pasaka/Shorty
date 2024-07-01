@@ -7,9 +7,11 @@ import org.slf4j.*
 object ServerConfig{
 
     private val load = ConfigFactory.load()
-    val port = load.getString("ktor.deployment.port") ?: "8080"
-    val logger: Logger =  LoggerFactory.getLogger(load.getString("ktor.server.logger") ?: "")
-    val apiVersion = load.getString("ktor.server.apiVersion") ?: ""
-    val baseUrl = load.getString("ktor.server.baseUrl") ?: ""
+    val port = System.getenv("SERVER_PORT") ?: load.getString("ktor.deployment.port") ?: "8080"
+    val logger: Logger =  LoggerFactory.getLogger(
+        System.getenv("LOGGER_NAME") ?:load.getString("ktor.server.logger") ?: ""
+    )
+    val apiVersion = System.getenv("API_VERSION") ?: load.getString("ktor.server.apiVersion") ?: ""
+    val baseUrl = System.getenv("BASE_URL") ?: load.getString("ktor.server.baseUrl") ?: ""
 
 }
