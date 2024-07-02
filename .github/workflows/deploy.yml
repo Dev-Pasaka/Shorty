@@ -1,0 +1,44 @@
+name: Deploy to Linode
+
+on:
+  workflow_run:
+    workflows: ["Docker Build and Push"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install SSH client
+        run: sudo apt-get update && sudo apt-get install -y openssh-client sshpass
+
+      - name: Deploy to Linode
+        env:
+          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+          DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
+          LINODE_USER: ${{ secrets.LINODE_USER }}
+          LINODE_PASSWORD: ${{ secrets.LINODE_PASSWORD }}
+          LINODE_HOST: ${{ secrets.LINODE_HOST }}
+        run: |
+          sshpass -p "$LINODE_PASSWORD" ssh -o StrictHostKeyChecking=no $LINODE_USER@$LINODE_HOST << 'EOF'
+            # Login to Docker Hub
+            echo $DOCKER_HUB_TOKEN | docker login --username $DOCKER_HUB_USERNAME --password-stdin
+
+            # Pull the latest image
+            docker pull pascarl/shorty:latest
+
+            # Stop and remove the existing container if running
+            docker stop shorty || true
+            docker rm shorty || true
+
+            # Run the new container
+            docker run -d --name shorty -p 8088:8088 pascarl/shorty:latest
+
+            # Logout from Docker Hub
+            docker logout
+          EOF
+
+      - name: Clean up
+        run: sshpass -p "$LINODE_PASSWORD" ssh -o StrictHostKeyChecking=no $LINODE_USER@$LINODE_HOST 'docker system prune -f'
