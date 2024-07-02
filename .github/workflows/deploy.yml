@@ -42,7 +42,7 @@ jobs:
             docker rm shorty || true
 
             # Run the new container
-            docker run -d --name shorty -p 80:80 pascarl/shorty:latest
+            docker run -d --name shorty -p 8088:8088 pascarl/shorty:latest
 
             # Logout from Docker Hub
             docker logout
