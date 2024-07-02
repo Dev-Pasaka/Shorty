@@ -35,14 +35,14 @@ jobs:
             echo $DOCKER_HUB_TOKEN | docker login --username $DOCKER_HUB_USERNAME --password-stdin
 
             # Pull the latest image
-            docker pull pascarl/shorty1:latest
+            docker pull pascarl/shorty:latest
 
             # Stop and remove the existing container if running
-            docker stop shorty1 || true
-            docker rm shorty1 || true
+            docker stop shorty || true
+            docker rm shorty || true
 
             # Run the new container
-            docker run -d --name shorty1 -p 80:80 pascarl/shorty1:latest
+            docker run -d --name shorty -p 80:80 pascarl/shorty:latest
 
             # Logout from Docker Hub
             docker logout
