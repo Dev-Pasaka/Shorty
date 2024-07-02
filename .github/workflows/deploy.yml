@@ -14,6 +14,14 @@ jobs:
       - name: Install SSH client
         run: sudo apt-get update && sudo apt-get install -y openssh-client sshpass
 
+      - name: Debug environment variables
+        run: |
+          echo "DOCKER_HUB_USERNAME=${{ secrets.DOCKER_HUB_USERNAME }}"
+          echo "DOCKER_HUB_TOKEN=${{ secrets.DOCKER_HUB_TOKEN }}"
+          echo "LINODE_USER=${{ secrets.LINODE_USER }}"
+          echo "LINODE_PASSWORD=${{ secrets.LINODE_PASSWORD }}"
+          echo "LINODE_HOST=${{ secrets.LINODE_HOST }}"
+
       - name: Deploy to Linode
         env:
           DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
@@ -22,23 +30,28 @@ jobs:
           LINODE_PASSWORD: ${{ secrets.LINODE_PASSWORD }}
           LINODE_HOST: ${{ secrets.LINODE_HOST }}
         run: |
-          sshpass -p "$LINODE_PASSWORD" ssh -o StrictHostKeyChecking=no $LINODE_USER@$LINODE_HOST << 'EOF'
+          sshpass -p "$LINODE_PASSWORD" ssh -o StrictHostKeyChecking=no $LINODE_USER@$LINODE_HOST << EOF
             # Login to Docker Hub
             echo $DOCKER_HUB_TOKEN | docker login --username $DOCKER_HUB_USERNAME --password-stdin
 
             # Pull the latest image
-            docker pull pascarl/shorty:latest
+            docker pull pascarl/shorty1:latest
 
             # Stop and remove the existing container if running
-            docker stop shorty || true
-            docker rm shorty || true
+            docker stop shorty1 || true
+            docker rm shorty1 || true
 
             # Run the new container
-            docker run -d --name shorty -p 8088:8088 pascarl/shorty:latest
+            docker run -d --name shorty1 -p 80:80 pascarl/shorty1:latest
 
             # Logout from Docker Hub
             docker logout
           EOF
 
       - name: Clean up
-        run: sshpass -p "$LINODE_PASSWORD" ssh -o StrictHostKeyChecking=no $LINODE_USER@$LINODE_HOST 'docker system prune -f'
+        env:
+          LINODE_USER: ${{ secrets.LINODE_USER }}
+          LINODE_PASSWORD: ${{ secrets.LINODE_PASSWORD }}
+          LINODE_HOST: ${{ secrets.LINODE_HOST }}
+        run: |
+          sshpass -p "$LINODE_PASSWORD" ssh -o StrictHostKeyChecking=no $LINODE_USER@$LINODE_HOST 'docker system prune -f'
